@@ -1,19 +1,12 @@
-const flagment_source = `#version 300 es
+const vertex_source = `#version 300 es
+in vec3 vertexPosition;		//頂点座標
+in vec4 color;				//頂点色
 
-//use OpenGL ES 3.0
-
-//position of vertex: x, y, z
-//color of vertex: r, g, b, alpha
-in vec3 vertexPosition;
-in vec4 color;
-
-//declaration a variable that output to flagment shader with "out".
 out vec4 vColor;
 
 void main()
 {
-	//dont any proccesings.
-	vcolor = color;
+	vColor = color;
 
 	gl_Position = vec4(vertexPosition, 1.0);
 }`;

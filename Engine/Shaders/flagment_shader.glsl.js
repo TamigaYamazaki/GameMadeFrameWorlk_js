@@ -1,12 +1,10 @@
-const vertex_source = `#version 300 es
-
+const flagment_source = `#version 300 es
 precision highp float;
 
 in vec4 vColor;
 
-out vec4 fragmentColor;
+out vec4 FragColor;
 
-void main()
-{
-	fragmentColor = vColor;
+void main() {
+    FragColor = vColor;
 }`;

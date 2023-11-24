@@ -1,10 +1,17 @@
-const canvas = documen.getElementById("screen").getContext("webgl2");
+const gl = document.getElementById("screen").getContext("webgl2");
 
-const loadVertexShader = fetch("./Shaders/vertex_shader.glsl");
-const loadFragmenShader = fetch("./Shaders/flagment_shader.glsl");
+if(!gl)
+{
+	alert("You cant use webgl2");
+}
+
+const loadVertexShader = vertex_source;
+const loadFragmenShader = flagment_source;
+
+console.log(loadVertexShader);
 
 Promise.all([loadVertexShader, loadFragmenShader])
-		.then((responses) => Promise.all([responses[0].text(), responses[1].text()]))
+		.then((responses) => Promise.all([responses[0], responses[1]]))
 		.then((shaderSources) => {
 			const vertexShaderSource = shaderSources[0];
 			const fragmentShaderSource = shaderSources[1];
@@ -36,13 +43,13 @@ Promise.all([loadVertexShader, loadFragmenShader])
 			}
 
 			//create shader program
-			const program = gl.CreateProgram();
+			const program = gl.createProgram();
 			gl.attachShader(program, vertexShader);
 			gl.attachShader(program, fragmentShader);
 			gl.linkProgram(program);
 
 			//check if the link is successful
-			const linkStatus = gl.getProgramParamaer(program, gl.LINK_STATUS);
+			const linkStatus = gl.getProgramParameter(program, gl.LINK_STATUS);
 			if(!linkStatus)
 			{
 				const info = gl.getProgramInfoLog(program);
@@ -51,4 +58,4 @@ Promise.all([loadVertexShader, loadFragmenShader])
 
 			//use program
 			gl.useProgram(program);
-		})
+		});

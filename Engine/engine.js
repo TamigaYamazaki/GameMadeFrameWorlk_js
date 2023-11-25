@@ -66,7 +66,7 @@ Promise.all([loadVertexShader, loadFragmenShader])
 
 			//シェーダーのデータ転送用バッファ領域
 			const vertexBuffer = gl.createBuffer();
-			const colorBuffer = gl.createBuffer();
+			const indexBuffer = gl.createBuffer();
 
 			//バーテックスシェーダーのin変数の位置取得
 			const vertexAttribLocation = gl.getAttribLocation(program, "vertexPosition");
@@ -74,42 +74,43 @@ Promise.all([loadVertexShader, loadFragmenShader])
 			const VERTEX_SIZE = 3;
 			const COLOR_SIZE = 4;
 
+			const STRIDE = (3 + 4) * Float32Array.BYTES_PER_ELEMENT;
+			const POSITION_OFFSET = 0;
+			const COLOR_OFFSET = 3 * Float32Array.BYTES_PER_ELEMENT;
+
 			gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);	//バッファをバインド
 			gl.enableVertexAttribArray(vertexAttribLocation);	//in変数を有効化
-			gl.vertexAttribPointer(vertexAttribLocation, VERTEX_SIZE, gl.FLOAT, false, 0, 0);	//バインドしているバッファと変数をリンク
-			//頂点色についても同様に
-			gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 			gl.enableVertexAttribArray(colorAttribLocation);
-			gl.vertexAttribPointer(colorAttribLocation, COLOR_SIZE, gl.FLOAT, false, 0, 0);
+			gl.vertexAttribPointer(vertexAttribLocation, VERTEX_SIZE, gl.FLOAT, false, STRIDE, POSITION_OFFSET);	//バインドしているバッファと変数をリンク
+			gl.vertexAttribPointer(colorAttribLocation, COLOR_SIZE, gl.FLOAT, false, STRIDE, COLOR_OFFSET);
 
 			/*頂点データを定義する
 			 *WebGL2では右手座標系
 			 *ポリゴンの頂点は反時計周りに定義する*/
 			const verteces = new Float32Array([
 				-0.5, 0.5, 0.0,
-				-0.5, -0.5, 0.0,
-				0.5, 0.5, 0.0,
-				-0.5, -0.5, 0.0,
-				0.5, -0.5, 0.0,
-				0.5, 0.5, 0.0
-			]);
-			const colors = new Float32Array([
 				1.0, 0.0, 0.0, 1.0,
+				-0.5, -0.5, 0.0,
 				0.0, 1.0, 0.0, 1.0,
+				0.5, 0.5, 0.0,
 				0.0, 0.0, 1.0, 1.0,
-				0.0, 1.0, 0.0, 1.0,
+				0.5, -0.5, 0.0,
 				0.0, 0.0, 0.0, 1.0,
-				0.0, 0.0, 1.0, 1.0
 			]);
+			const indexes = new Uint16Array([
+				0, 1, 2,
+				1, 3, 2
+			])
 
 			//バインドしてデータを転送
 			gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 			gl.bufferData(gl.ARRAY_BUFFER, verteces, gl.STATIC_DRAW);
-			gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-			gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
 
-			const VERTEX_NUMS = 6;
-			gl.drawArrays(gl.TRIANGLES, 0, VERTEX_NUMS);
+			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indexes, gl.STATIC_DRAW);
+
+			const indexSize = indexes.length;
+			gl.drawElements(gl.TRIANGLES, indexSize, gl.UNSIGNED_SHORT, 0);
 
 			gl.flush();
 		});

@@ -29,17 +29,13 @@ class Graphics
 		};
 	}
 
-	async init()
+	init()
 	{
 		this.canvas.width = this.screen_size.width;
 		this.canvas.height = this.screen_size.height;
 
 		this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 		this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-
-		// const texture_data = await fetch("./Non-CopyRight-girl.jpg")
-		// 						.then((response) => response.blob())
-		// 						.then((blob) => createImageBitmap(blob));
 	}
 
 	main_loop(timestamp)

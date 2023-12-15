@@ -1,17 +1,45 @@
-<mxfile host="app.diagrams.net" modified="2023-12-15T08:23:22.860Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" etag="f3NwmCuftHENYUxWLrCJ" version="22.1.9" type="github">
+<mxfile host="app.diagrams.net" modified="2023-12-15T08:34:24.368Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" etag="3Tapo1OvDyP23FPvQZSg" version="22.1.9" type="github">
   <diagram name="ページ1" id="hD4opN9VpknbNqU1b7Oj">
     <mxGraphModel dx="1434" dy="772" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="AUF0hyaP5ivSWC6ZNrzQ-1" value="main_loop" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="344" y="240" width="140" height="90" as="geometry" />
+        <mxCell id="AUF0hyaP5ivSWC6ZNrzQ-1" value="起動" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="344" y="240" width="140" height="150" as="geometry" />
         </mxCell>
-        <mxCell id="AUF0hyaP5ivSWC6ZNrzQ-2" value="シェーダー設定" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="AUF0hyaP5ivSWC6ZNrzQ-1">
+        <mxCell id="AUF0hyaP5ivSWC6ZNrzQ-2" value="シェーダー設定" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="AUF0hyaP5ivSWC6ZNrzQ-1" vertex="1">
           <mxGeometry y="30" width="140" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="AUF0hyaP5ivSWC6ZNrzQ-3" value="Item 2" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="AUF0hyaP5ivSWC6ZNrzQ-1">
+        <mxCell id="AUF0hyaP5ivSWC6ZNrzQ-3" value="シーン読み込み" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="AUF0hyaP5ivSWC6ZNrzQ-1" vertex="1">
           <mxGeometry y="60" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xLFt_ngKc4ZPYv_Qw4S8-3" value="全ての Start() 実行" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="AUF0hyaP5ivSWC6ZNrzQ-1">
+          <mxGeometry y="90" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xLFt_ngKc4ZPYv_Qw4S8-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="AUF0hyaP5ivSWC6ZNrzQ-1" source="xLFt_ngKc4ZPYv_Qw4S8-8" target="xLFt_ngKc4ZPYv_Qw4S8-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-14" y="135" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="166" y="135" />
+              <mxPoint x="166" y="200" />
+              <mxPoint x="-24" y="200" />
+              <mxPoint x="-24" y="135" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xLFt_ngKc4ZPYv_Qw4S8-8" value="mainloop() 実行" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="AUF0hyaP5ivSWC6ZNrzQ-1">
+          <mxGeometry y="120" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="xLFt_ngKc4ZPYv_Qw4S8-6" value="&lt;ul&gt;&lt;li&gt;コンポーネント読み込み&lt;/li&gt;&lt;li&gt;シーン内のオブジェクト登録&lt;/li&gt;&lt;/ul&gt;" style="text;strokeColor=none;fillColor=none;html=1;whiteSpace=wrap;verticalAlign=middle;overflow=hidden;" vertex="1" parent="1">
+          <mxGeometry x="560" y="260" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="xLFt_ngKc4ZPYv_Qw4S8-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.05;entryY=0.425;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="AUF0hyaP5ivSWC6ZNrzQ-3" target="xLFt_ngKc4ZPYv_Qw4S8-6">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="315" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="xLFt_ngKc4ZPYv_Qw4S8-11" value="繰り返し" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="366" y="400" width="96" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

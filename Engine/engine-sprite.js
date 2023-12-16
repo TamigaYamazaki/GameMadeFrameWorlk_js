@@ -1,4 +1,4 @@
-class Sprite
+class Sprite extends ObjectBehaviour
 {
     constructor(src, width, height)
     {

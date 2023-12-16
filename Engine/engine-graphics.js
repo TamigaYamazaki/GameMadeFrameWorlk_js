@@ -53,7 +53,6 @@ class Graphics
 
 
 const graphic = new Graphics();
-graphic.init();
 
 const loadVertexShader = vertex_source;
 const loadFragmenShader = flagment_source;

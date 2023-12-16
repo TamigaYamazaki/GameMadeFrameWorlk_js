@@ -1,9 +1,8 @@
 class ObjectBehaviour
 {
-    constructor(g)
+    constructor()
     {
-        this.g = g;
-        this.gl = g.Graphic_value_pack.gl;
+        
     }
 
     Start()

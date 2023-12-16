@@ -2,12 +2,23 @@ class Sprite extends ObjectBehaviour
 {
     constructor(src, width, height)
     {
+        super();
         this.src = src;
         this.size = {
             Width: width,
             Height: height
         };
         this.texture_data = null;
+    }
+
+    Start()
+    {
+        
+    }
+
+    Update(deltaTime)
+    {
+        
     }
 
     async load_file(mode)

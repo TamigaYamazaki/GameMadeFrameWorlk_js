@@ -13,6 +13,8 @@ class Graphics
 		this.canvas = document.getElementById("screen");
 		this.gl = this.canvas.getContext("webgl2");
 
+		this.update_functions = [];
+
 		if(!this.gl)
 		{
 			alert("You cant use webgl2");
@@ -43,6 +45,8 @@ class Graphics
 		this.deltaTime = (timestamp - this.et) / 1000;	//有効数字2桁
 		this.et = timestamp;
 		this.fps = 1 / this.deltaTime;
+
+		this.update_functions.forEach((element) => {element.Update()});
 
 		this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 		this.gl.clear(this.gl.COLOR_BUFFER_BIT);

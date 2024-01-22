@@ -14,6 +14,7 @@ class Graphics
 		this.gl = this.canvas.getContext("webgl2");
 
 		this.update_functions = [];
+		this.start_functions = [];
 
 		if(!this.gl)
 		{
@@ -40,16 +41,21 @@ class Graphics
 		this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 	}
 
+	Start()
+	{
+		this.start_functions.forEach((element) => {element.Start()});
+	}
+
 	main_loop(timestamp)
 	{
 		this.deltaTime = (timestamp - this.et) / 1000;	//有効数字2桁
 		this.et = timestamp;
 		this.fps = 1 / this.deltaTime;
 
-		this.update_functions.forEach((element) => {element.Update()});
-
 		this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 		this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+
+		this.update_functions.forEach((element) => {element.Update()});
 
 		window.requestAnimationFrame((ts) => this.main_loop(ts));
 	}
@@ -61,7 +67,7 @@ const graphic = new Graphics();
 const loadVertexShader = vertex_source;
 const loadFragmenShader = flagment_source;
 
-function UseShader()
+async function UseShader()
 {
 	Promise.all([loadVertexShader, loadFragmenShader])
 	.then((responses) => Promise.all([responses[0], responses[1]]))

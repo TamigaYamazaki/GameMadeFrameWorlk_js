@@ -9,16 +9,42 @@ class Sprite extends ObjectBehaviour
             Height: height
         };
         this.texture_data = null;
+
+        this.vertexBuffer = null;
+        this.indexBuffer = null;
+        this.vertexAttribLocation = null;
+        this.colorAttribLocation = null;
+        this.VERTEX_SIZE = 3;
+        this.COLOR_SIZE = 4;
+
+        this.STRIDE = (3 + 4) * Float32Array.BYTES_PER_ELEMENT;
+        this.POSITION_OFFSET = 0;
+        this.COLOR_OFFSET = 3 * Float32Array.BYTES_PER_ELEMENT;
     }
 
     Start()
     {
-        
+        this.vertexBuffer = graphic.gl.createBuffer();
+        this.indexBuffer = graphic.gl.createBuffer();
+        this.vertexAttribLocation = graphic.gl.getAttribLocation(graphic.program, "vertexPosition");
+        this.colorAttribLocation = graphic.gl.getAttribLocation(graphic.program, "color");
+        this.VERTEX_SIZE = 3;
+        this.COLOR_SIZE = 4;
+
+        this.STRIDE = (3 + 4) * Float32Array.BYTES_PER_ELEMENT;
+        this.POSITION_OFFSET = 0;
+        this.COLOR_OFFSET = 3 * Float32Array.BYTES_PER_ELEMENT;
+
+        graphic.gl.bindBuffer(graphic.gl.ARRAY_BUFFER, this.vertexBuffer);   //バッファをバインド
+        graphic.gl.enableVertexAttribArray(this.vertexAttribLocation);   //in変数を有効化
+        graphic.gl.enableVertexAttribArray(this.colorAttribLocation);
+        graphic.gl.vertexAttribPointer(this.vertexAttribLocation, this.VERTEX_SIZE, graphic.gl.FLOAT, false, this.STRIDE, this.POSITION_OFFSET);    //バインドしているバッファと変数をリンク
+        graphic.gl.vertexAttribPointer(this.colorAttribLocation, this.COLOR_SIZE, graphic.gl.FLOAT, false, this.STRIDE, this.COLOR_OFFSET);
     }
 
     Update(deltaTime)
     {
-        
+        this.draw();
     }
 
     async load_file(mode)
@@ -63,23 +89,6 @@ class Sprite extends ObjectBehaviour
 
     draw()
     {
-        const vertexBuffer = graphic.gl.createBuffer();
-        const indexBuffer = graphic.gl.createBuffer();
-
-        const vertexAttribLocation = graphic.gl.getAttribLocation(graphic.program, "vertexPosition");
-        const colorAttribLocation = graphic.gl.getAttribLocation(graphic.program, "color");
-        const VERTEX_SIZE = 3;
-        const COLOR_SIZE = 4;
-
-        const STRIDE = (3 + 4) * Float32Array.BYTES_PER_ELEMENT;
-        const POSITION_OFFSET = 0;
-        const COLOR_OFFSET = 3 * Float32Array.BYTES_PER_ELEMENT;
-
-        graphic.gl.bindBuffer(graphic.gl.ARRAY_BUFFER, vertexBuffer);   //バッファをバインド
-        graphic.gl.enableVertexAttribArray(vertexAttribLocation);   //in変数を有効化
-        graphic.gl.enableVertexAttribArray(colorAttribLocation);
-        graphic.gl.vertexAttribPointer(vertexAttribLocation, VERTEX_SIZE, graphic.gl.FLOAT, false, STRIDE, POSITION_OFFSET);    //バインドしているバッファと変数をリンク
-        graphic.gl.vertexAttribPointer(colorAttribLocation, COLOR_SIZE, graphic.gl.FLOAT, false, STRIDE, COLOR_OFFSET);
 
         //頂点データを定義する
         //WebGL2では右手座標系
@@ -100,15 +109,15 @@ class Sprite extends ObjectBehaviour
         ]);
 
         //バインドしてデータを転送
-        gl.bindBuffer(graphic.gl.ARRAY_BUFFER, vertexBuffer);
-        gl.bufferData(graphic.gl.ARRAY_BUFFER, verteces, graphic.gl.STATIC_DRAW);
+        // graphic.gl.bindBuffer(graphic.gl.ARRAY_BUFFER, vertexBuffer);
+        // graphic.gl.bufferData(graphic.gl.ARRAY_BUFFER, verteces, graphic.gl.STATIC_DRAW);
 
-        gl.bindBuffer(graphic.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-        gl.bufferData(graphic.gl.ELEMENT_ARRAY_BUFFER, indexes, graphic.gl.STATIC_DRAW);
+        // graphic.gl.bindBuffer(graphic.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+        // graphic.gl.bufferData(graphic.gl.ELEMENT_ARRAY_BUFFER, indexes, graphic.gl.STATIC_DRAW);
 
-        const indexSize = indexes.length;
-        gl.drawElements(graphic.gl.TRIANGLES, indexSize, graphic.gl.UNSIGNED_SHORT, 0);
+        // const indexSize = indexes.length;
+        // graphic.gl.drawElements(graphic.gl.TRIANGLES, indexSize, graphic.gl.UNSIGNED_SHORT, 0);
 
-        gl.flush();
+        // graphic.gl.flush();
     }
 }

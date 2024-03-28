@@ -1,50 +1,13 @@
-class Sprite extends ObjectBehaviour
+class Sprite
 {
     constructor(src, width, height)
     {
-        super();
         this.src = src;
         this.size = {
             Width: width,
             Height: height
         };
         this.texture_data = null;
-
-        this.vertexBuffer = null;
-        this.indexBuffer = null;
-        this.vertexAttribLocation = null;
-        this.colorAttribLocation = null;
-        this.VERTEX_SIZE = 3;
-        this.COLOR_SIZE = 4;
-
-        this.STRIDE = (3 + 4) * Float32Array.BYTES_PER_ELEMENT;
-        this.POSITION_OFFSET = 0;
-        this.COLOR_OFFSET = 3 * Float32Array.BYTES_PER_ELEMENT;
-    }
-
-    Start()
-    {
-        this.vertexBuffer = graphic.gl.createBuffer();
-        this.indexBuffer = graphic.gl.createBuffer();
-        this.vertexAttribLocation = graphic.gl.getAttribLocation(graphic.program, "vertexPosition");
-        this.colorAttribLocation = graphic.gl.getAttribLocation(graphic.program, "color");
-        this.VERTEX_SIZE = 3;
-        this.COLOR_SIZE = 4;
-
-        this.STRIDE = (3 + 4) * Float32Array.BYTES_PER_ELEMENT;
-        this.POSITION_OFFSET = 0;
-        this.COLOR_OFFSET = 3 * Float32Array.BYTES_PER_ELEMENT;
-
-        graphic.gl.bindBuffer(graphic.gl.ARRAY_BUFFER, this.vertexBuffer);   //バッファをバインド
-        graphic.gl.enableVertexAttribArray(this.vertexAttribLocation);   //in変数を有効化
-        graphic.gl.enableVertexAttribArray(this.colorAttribLocation);
-        graphic.gl.vertexAttribPointer(this.vertexAttribLocation, this.VERTEX_SIZE, graphic.gl.FLOAT, false, this.STRIDE, this.POSITION_OFFSET);    //バインドしているバッファと変数をリンク
-        graphic.gl.vertexAttribPointer(this.colorAttribLocation, this.COLOR_SIZE, graphic.gl.FLOAT, false, this.STRIDE, this.COLOR_OFFSET);
-    }
-
-    Update(deltaTime)
-    {
-        this.draw();
     }
 
     async load_file(mode)

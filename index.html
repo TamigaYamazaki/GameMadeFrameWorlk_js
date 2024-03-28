@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Title</title>
+		<title>WebG2D Engine</title>
 		<meta charset="utf-8">
 
 		<!--参考記事: https://sbfl.net/blog/2016/09/04/webgl2-tutorial-basics/
 				https://wgld.org/d/webgl2/w003.html
-				https://sbfl.net/blog/2017/06/23/webgl2-2d-graphics/-->
+				https://sbfl.net/blog/2017/06/23/webgl2-2d-graphics/
+			-->
 		
 		<script src="./Engine/Shaders/vertex_texture_shader.glsl.js"></script>
 		<script src="./Engine/Shaders/fragment_vertex_shader.glsl.js"></script>
@@ -15,9 +16,7 @@
 		<canvas id="screen" width="1080" height="620" style="display: block; margin:0 auto; background-color:#EEEEEE;"></canvas>
 
 		<!--ゲームエンジンを読み込む-->
-		<script src="./Engine/engine-graphics.js"></script>
-		<script src="./Engine/engine-baseComponent.js"></script>
 		<script src="./Engine/engine-sprite.js"></script>
-		<script src="./Engine/engine-app.js"></script>	<!--アプリケーション起動の機能が固定されるので必要なければ削除-->
+		<script src="./Engine/engine-graphics.js"></script>
 	</body>
 </html>

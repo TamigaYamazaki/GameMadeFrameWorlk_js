@@ -1,183 +1,153 @@
 "use strict";
 
-class Graphics
-{
-	constructor()
-	{
-		this.program = null;
-		this.screen_size = {
-			width: Math.round(window.innerHeight * 16 / 9),
-			height: window.innerHeight
-		};
-
-		this.canvas = document.getElementById("screen");
-		this.gl = this.canvas.getContext("webgl2");
-
-		this.update_functions = [];
-		this.start_functions = [];
-
-		if(!this.gl)
-		{
-			alert("You cant use webgl2");
-		}
-
-		this.fps = 60;
-		this.et = 0.0;
-		this.deltaTime = 0.0;
-
-		this.Graphic_value_pack = {
-			sc: this.canvas,
-			gl: this.gl,
-			dt: this.deltaTime
-		};
-	}
-
-	init()
-	{
-		this.canvas.width = this.screen_size.width;
-		this.canvas.height = this.screen_size.height;
-
-		this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-		this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-	}
-
-	Start()
-	{
-		this.start_functions.forEach((element) => {element.Start()});
-	}
-
-	main_loop(timestamp)
-	{
-		this.deltaTime = (timestamp - this.et) / 1000;	//有効数字2桁
-		this.et = timestamp;
-		this.fps = 1 / this.deltaTime;
-
-		this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-		this.gl.clear(this.gl.COLOR_BUFFER_BIT);
-
-		this.update_functions.forEach((element) => {element.Update()});
-
-		window.requestAnimationFrame((ts) => this.main_loop(ts));
-	}
-}
-
-
-const graphic = new Graphics();
+const canvas = document.getElementById("screen");
+const gl = canvas.getContext("webgl2");
+const program = gl.createProgram();
 
 const loadVertexShader = vertex_source;
-const loadFragmenShader = flagment_source;
+const loadFragmentShader = flagment_source;
 
-async function UseShader()
-{
-	Promise.all([loadVertexShader, loadFragmenShader])
-	.then((responses) => Promise.all([responses[0], responses[1]]))
-	.then((shaderSources) => {
-		const vertexShaderSource = shaderSources[0];
-		const fragmentShaderSource = shaderSources[1];
+Promise.all([loadVertexShader, loadFragmentShader])
+    .then((responses) => Promise.all([responses[0], responses[1]]))
+    .then((shaderSources) => {
+        const vertexShaderSource = shaderSources[0];
+        const fragmentShaderSource = shaderSources[1];
 
-		//compile vertex shader
-		const vertexShader = graphic.gl.createShader(graphic.gl.VERTEX_SHADER);
-		graphic.gl.shaderSource(vertexShader, vertexShaderSource);
-		graphic.gl.compileShader(vertexShader);
+        // バーテックスシェーダをコンパイル
+        const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+        gl.shaderSource(vertexShader, vertexShaderSource);
+        gl.compileShader(vertexShader);
 
-		//check if compiling verex shader was successful
-		const vShaderCompileStatus = graphic.gl.getShaderParameter(vertexShader, graphic.gl.COMPILE_STATUS);
-		if(!vShaderCompileStatus)
+        // コンパイル成功したか否かをチェック
+        const vShaderCompileStatus = gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS);
+        if(!vShaderCompileStatus) {
+            const info = gl.getShaderInfoLog(vertexShader);
+            console.log(info);
+        }
+
+        // フラグメントシェーダ
+        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+        gl.shaderSource(fragmentShader, fragmentShaderSource);
+        gl.compileShader(fragmentShader);
+
+        const fShaderCompileStatus = gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS);
+        if(!fShaderCompileStatus) {
+            const info = gl.getShaderInfoLog(fragmentShader);
+            console.log(info);
+        }
+
+        // シェーダプログラムを作成
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+
+        // リンクできたかどうかを確認
+        const linkStatus = gl.getProgramParameter(program, gl.LINK_STATUS);
+        if(!linkStatus) {
+            const info = gl.getProgramInfoLog(program);
+            console.log(info);
+        }else
 		{
-			const info = graphic.gl.getShaderInfoLog(vertexShader);
-			console.log(info);
+			console.log("linking is successful");
 		}
 
-		//compile fragment shader
-		const fragmentShader = graphic.gl.createShader(graphic.gl.FRAGMENT_SHADER);
-		graphic.gl.shaderSource(fragmentShader, fragmentShaderSource);
-		graphic.gl.compileShader(fragmentShader);
+        // プログラムを使用
+        gl.useProgram(program);
 
-		//check if compiling fragment shader was successful
-		const fShaderCompileStatus = graphic.gl.getShaderParameter(fragmentShader, graphic.gl.COMPILE_STATUS);
-		if(!fShaderCompileStatus)
-		{
-			const info = graphic.gl.getShaderInfoLog(fragmentShader);
-			console.log(info);
-		}
+		//テクスチャの読み込み
+        const image = new Sprite("./Non-CopyRight-Girl.jpg", 512, 512);
+		image.load_file(1);
+		const texture_width = image.size.width;
+		const texture_height = image.size.height;
 
-		//create shader program
-		graphic.program = graphic.gl.createProgram();
-		graphic.gl.attachShader(graphic.program, vertexShader);
-		graphic.gl.attachShader(graphic.program, fragmentShader);
-		graphic.gl.linkProgram(graphic.program);
+		//
+		//バッファの作成
+		//
 
-		//check if the link is successful
-		const linkStatus = graphic.gl.getProgramParameter(graphic.program, graphic.gl.LINK_STATUS);
-		if(!linkStatus)
-		{
-			const info = graphic.gl.getProgramInfoLog(graphic.program);
-			console.log(info);
-		}else
-		{
-			console.log("Linking shader to program and compiling was successful")
-		}
+		// 頂点バッファ：[座標(vec2)][テクスチャ座標(vec2)]
+		const vertexBuffer = gl.createBuffer();
 
-		//use program
-		graphic.gl.useProgram(graphic.program);
-	});
-}
+		// インデックスバッファ
+		const indexBuffer = gl.createBuffer();
 
-/* ページが読み込まれたら実行 */
-/*window.addEventListener("load", (event) => {
+		// strideは頂点情報のサイズなのでvec2+vec2で4
+		// offsetはstride内での位置なので各々計算する
+		// strideもoffsetもバイト数で指定する
+		const STRIDE = Float32Array.BYTES_PER_ELEMENT * 4
+		const TEXTURE_OFFSET = Float32Array.BYTES_PER_ELEMENT * 2;
 
-	UseShader();
+		const POSITION_SIZE = 2;
+		const TEXTURE_SIZE = 2;
 
-			/*
-			//シェーダーのデータ転送用バッファ領域
-			const vertexBuffer = gl.createBuffer();
-			const indexBuffer = gl.createBuffer();
+		//操作対象のバッファをbindしてから作業する
+		gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
-			//バーテックスシェーダーのin変数の位置取得
-			const vertexAttribLocation = gl.getAttribLocation(program, "vertexPosition");
-			const colorAttribLocation = gl.getAttribLocation(program, "color");
-			const VERTEX_SIZE = 3;
-			const COLOR_SIZE = 4;
+		//各頂点情報の位置
+		const vtxAttrLocation = gl.getAttribLocation(program, "vertexPosition");		//確保した領域をprogramの領域と関連付ける
+		const textureCoordLocation = gl.getAttribLocation(program, "textureCoord");
 
-			const STRIDE = (3 + 4) * Float32Array.BYTES_PER_ELEMENT;
-			const POSITION_OFFSET = 0;
-			const COLOR_OFFSET = 3 * Float32Array.BYTES_PER_ELEMENT;
+		//各頂点情報の有効化
+		gl.enableVertexAttribArray(vtxAttrLocation);
+		gl.enableVertexAttribArray(textureCoordLocation);
 
-			gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);	//バッファをバインド
-			gl.enableVertexAttribArray(vertexAttribLocation);	//in変数を有効化
-			gl.enableVertexAttribArray(colorAttribLocation);
-			gl.vertexAttribPointer(vertexAttribLocation, VERTEX_SIZE, gl.FLOAT, false, STRIDE, POSITION_OFFSET);	//バインドしているバッファと変数をリンク
-			gl.vertexAttribPointer(colorAttribLocation, COLOR_SIZE, gl.FLOAT, false, STRIDE, COLOR_OFFSET);
+		//各頂点情報の情報指定
+		gl.vertexAttribPointer(vtxAttrLocation, POSITION_SIZE, gl.FLOAT, false, STRIDE, 0);		//指定された頂点属性の場所を変更する
+		gl.vertexAttribPointer(textureCoordLocation, TEXTURE_SIZE, gl.FLOAT, false, STRIDE, TEXTURE_OFFSET);
 
-			//頂点データを定義する
-			//WebGL2では右手座標系
-			//ポリゴンの頂点は反時計周りに定義する
-			const verteces = new Float32Array([
-				-0.5, 0.5, 0.0,
-				1.0, 0.0, 0.0, 1.0,
-				-0.5, -0.5, 0.0,
-				0.0, 1.0, 0.0, 1.0,
-				0.5, 0.5, 0.0,
-				0.0, 0.0, 1.0, 1.0,
-				0.5, -0.5, 0.0,
-				0.0, 0.0, 0.0, 1.0,
-			]);
-			const indexes = new Uint16Array([
-				0, 1, 2,
-				1, 3, 2
-			])
+		//
+		//シェーダーのuniform変数の設定
+		//
 
-			//バインドしてデータを転送
-			gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-			gl.bufferData(gl.ARRAY_BUFFER, verteces, gl.STATIC_DRAW);
+		// デフォルトの状態だとxy座標ともに[-1.0, 1.0]が表示されるので、
+    	// 2Dグラフィックスで一般的な[0.0, width or height]座標に変換する。
+		const xScale = 2.0 / canvas.width;
+		const yScale = 2.0 / canvas.height;		//上下逆
 
-			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-			gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indexes, gl.STATIC_DRAW);
+		/* 行列について https://qiita.com/mizar/items/1d3717531b407fed59e7
+		 */
+		//OpenGL/WebGLは右手系
+		
+		const scalingMatrix = new Float32Array([
+			xScale, 0.0   , 0.0, 0.0,
+			0.0   , yScale, 0.0, 0.0,
+			0.0   , 0.0   , 1.0, 0.0,
+			0.0   , 0.0   , 0.0, 1.0
+		]);
 
-			const indexSize = indexes.length;
-			gl.drawElements(gl.TRIANGLES, indexSize, gl.UNSIGNED_SHORT, 0);
+		//(0, 0)が中心になってしまうので左上に持ってくる
+		const translationMatrix = new Float32Array([
+			1.0, 0.0, 0.0, 0.0,
+			0.0, 1.0, 0.0, 0.0,
+			0.0, 0.0, 1.0, 0.0,
+			-1.0, 1.0, 0.0, 1.0
+		])
 
-			gl.flush();
+		const scalingLocation = gl.getUniformLocation(program, "scaling");			//programのuniform変数の場所を取得
+		const translationLocation = gl.getUniformLocation(program, "translation");
+		gl.uniformMatrix4fv(translationLocation, false, translationMatrix);			//取得したuniform変数に行列を代入
+		gl.uniformMatrix4fv(translationLocation, false, scalingMatrix);
 
-	window.requestAnimationFrame((ts) => graphic.main_loop(ts));
-});*/
+		//
+		//テクスチャの転送
+		//
+
+		// const texture = gl.createTexture();			//テクスチャの作成
+		// gl.bindTexture(gl.TEXTURE_2D, texture);		//textureをバインド
+		// gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image.texture_data);	//テクスチャデータの転送
+		// gl.generateMipmap(gl.TEXTURE_2D);		//ミップマップの作成
+
+		// //使用するテクスチャの指定
+		// const textureLocation = gl.getUniformLocation(program, "tex");
+		// gl.uniform1i(textureLocation, 0);
+
+		// //
+		// //アルファブレンドを有効にする
+		// //
+		// gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+		// gl.enable(gl.BLEND);
+
+		// //
+		// //描画に用いるデータ
+		// //
+
+    });
